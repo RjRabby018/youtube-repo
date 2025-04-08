@@ -17,7 +17,12 @@ const loadCategoryVideos=(id)=>{
         console.log(url);
         fetch(url)
         .then(res=>res.json())
-        .then(data=>displayVideos(data.category ))
+        .then(data=>{
+            const clickButton=document.getElementById(`btn-${id}`);
+            clickButton.classList.add('active')
+            console.log(clickButton)
+            displayVideos(data.category)
+        })
 }
 
 function displayCategories(categories) {
@@ -29,7 +34,7 @@ function displayCategories(categories) {
         // akhon div create korbo
         const categoryDiv = document.createElement('div');
         categoryDiv.innerHTML = `
-        <button onclick="loadCategoryVideos(${cat.category_id})" class="btn btn-sm hover:bg-[#FF1F3D] hover:text-white">${cat.category}</button>
+        <button id="btn-${cat.category_id}" onclick="loadCategoryVideos(${cat.category_id})" class="btn btn-sm hover:bg-[#FF1F3D] hover:text-white">${cat.category}</button>
         `;
         categoryContainer.appendChild(categoryDiv)
     }
@@ -37,6 +42,15 @@ function displayCategories(categories) {
 const displayVideos = (videos) => {
     //    now i have to call the video container
     const videoContainer = document.getElementById('video-container')
+    if(videos.length==0){
+        videoContainer.innerHTML=`
+         <div class="col-span-full flex flex-col justify-center items-center py-6">
+        <img class="w-[120px]" src="assets/Icon.png" alt="">
+        <h2 class="text-2xl font-bold text-center">Oops!! Sorry, There is no content here</h2>
+       </div>
+        `
+        return;
+    }
     videoContainer.innerHTML="";
     videos.forEach((video) => {
         console.log(video)
